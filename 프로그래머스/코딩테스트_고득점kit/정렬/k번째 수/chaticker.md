@@ -1,3 +1,5 @@
+![KakaoTalk_20211011_185510991](https://user-images.githubusercontent.com/23302973/136782323-3d87e7a4-53d4-4d37-b54a-19c5d25fd8a3.jpg)
+
 ```javascript
 //첫 번째 코드
 function solution(array, commands) {
