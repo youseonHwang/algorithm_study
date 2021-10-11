@@ -1,3 +1,4 @@
+https://www.notion.so/chaticker/b73368e29bee4b5e990c4dfbdf4de8a3#5e82b3a904074c6687479c0ecb92231e
 ```javascript
 //첫 번째 코드
 function solution(array, commands) {
