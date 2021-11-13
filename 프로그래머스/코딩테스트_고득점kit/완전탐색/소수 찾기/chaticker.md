@@ -9,7 +9,7 @@
 - 소수인 경우 결과 배열에 넣고 개수 카운트 해서 리턴
 
 ```javascript
-//repl 코드(미해결)
+//repl 코드
 let numbers = "17";
 let answer = [];
 //문자열 한 글자씩 잘라서 배열로 만들기
@@ -88,7 +88,7 @@ function solution(numbers) {
 answer.push(newFixed); 에서 중복되는 값을 체크 안 하고 그냥 넣어서 생긴 문제
 
 ```javascript
-//프로그래머스 2차 코드(미해결)
+//프로그래머스 2차 코드
 function isPrime(num) {
   for (let i = 2; num > i; i++) {
     if (num % i === 0) {
@@ -123,3 +123,43 @@ function solution(numbers) {
 ```
 
 왜 자꾸 011이 포함되는지 의문,,, 타입 문제인듯한데 다시 확인해보기
+
+```javascript
+//프로그래머스 3차 코드
+function isPrime(num) {
+  for (let i = 2; num > i; i++) {
+    if (num % i === 0) {
+      return false;
+    }
+  }
+  return num > 1;
+}
+
+function solution(numbers) {
+  let answer = [];
+  let res = numbers.split("");
+
+  const getPermutation = (res, fixed) => {
+    if (res.length >= 1) {
+      for (let i = 0; i < res.length; i++) {
+        const newFixed = fixed + res[i];
+        const copyArr = res.slice();
+        copyArr.splice(i, 1);
+        if (
+          isPrime(parseInt(newFixed)) &&
+          answer.indexOf(parseInt(newFixed)) === -1
+        ) {
+          answer.push(parseInt(newFixed));
+        }
+        getPermutation(copyArr, newFixed);
+      }
+    }
+  };
+
+  getPermutation(res, "");
+
+  return answer.length;
+}
+```
+
+통과
