@@ -117,10 +117,69 @@ TypeError [Error]: m.replaceAll is not a function 가 자꾸 떠서 찾아보니
 
 ![image](https://user-images.githubusercontent.com/23302973/146873441-3a391a65-751f-4062-a74c-916a05dc06dc.png)
 
-#을 제거하고 난 이후를 생각못함
+#을 제거하고 난 이후를 생각못함 -> 애초에 replace할 때, #이 붙은 애들을 제거하는 게 아니라, 다른 문자 자체로 치환하기
 
 ---
 
 ```javascript
 //프로그래머스 2차 코드
+function solution(m, musicinfos) {
+	const time = musicinfos.map((data) => {
+		return data.split(",");
+	});
+
+	let compare = [];
+	let replaceM = m
+		.replace(/(C#)/g, "c")
+		.replace(/(D#)/g, "d")
+		.replace(/(F#)/g, "f")
+		.replace(/(G#)/g, "g")
+		.replace(/(A#)/g, "a");
+
+	for (let i in time) {
+		const [minutes, seconds] = time[i][1].split(":");
+		const totalSeconds = +seconds;
+		let mName = time[i][2];
+		let melody = time[i][3]
+			.replace(/(C#)/g, "c")
+			.replace(/(D#)/g, "d")
+			.replace(/(F#)/g, "f")
+			.replace(/(G#)/g, "g")
+			.replace(/(A#)/g, "a");
+		if (melody.length > totalSeconds) {
+			let result = melody.substring(0, totalSeconds);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length < totalSeconds) {
+			let result = melody.repeat(totalSeconds / melody.length);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length == totalSeconds) {
+			compare.push([mName, melody, melody.length]);
+		}
+	}
+	let answer = [];
+	let maxLength = 0;
+	for (let i in compare) {
+		if (compare[i][1].includes(replaceM) && compare[i][2] > maxLength) {
+			maxLength = compare[i][2];
+			answer.push(compare[i][0]);
+		}
+	}
+	return answer.length != 0 ? answer[0] : "(None)";
+}
+```
+
+![image](https://user-images.githubusercontent.com/23302973/146879792-3c4fb483-5d3a-4b42-b027-aec0b6024802.png)
+
+뭐가 문제일까,,
+
+1.  재생된 시간도 같을 경우 먼저 입력된 음악 제목을 리턴 -> 입력된 시간이 빠른 걸 찾아야함
+
+2. 
+
+---
+
+```javascript
+//프로그래머스 3차 코드
 ```
