@@ -1,45 +1,126 @@
 코드 짜기 전에
 
-1. 재생 시간의 길이와 음악의 음 길이 비교해서 최종 음 문자열 생성
-2. 최종 음 문자열 내 m과 일치하는 문자열이 존재하는지 비교
+1. 재생 시간의 길이와 음악의 음 길이 비교해서 최종 음 문자열 생성(해결)
+2. 최종 음 문자열 내 m과 일치하는 문자열이 존재하는지 비교(해결)
 
-    -> 문자열 m에 #이 있는 경우 제거하기
-    -> 중복되어 일치하는 경우 음이 제일 길게 나온 음악 리턴
+    -> 문자열 m에 #이 있는 경우 제거하기(해결)
 
-3. 있다면 음악 제목 리턴 / 없다면 "(None)" 리턴
+    -> 중복되어 일치하는 경우 음이 제일 길게 나온 음악 리턴(해결)
+
+    -> 재생된 시간도 같을 경우 먼저 입력된 음악 제목을 리턴
+
+3. 있다면 음악 제목 리턴 / 없다면 "(None)" 리턴(해결)
 
 ```javascript
-//repl 코드(미해결)
-let m = "ABCDEFG";
-let musicinfos = ["12:00,12:14,HELLO,CDE#FG#AB#", "13:00,13:05,WORLD,ABCDEF"];
+//repl 코드
+let m = "CC#BCC#BCC#BCC#B";
+let musicinfos = ["03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"];
 
-const time = musicinfos.map((data) => {
-	return data.split(",");
-});
+console.log(music(m, musicinfos));
 
-console.log(time);
+function music(m, musicinfos) {
+	const time = musicinfos.map((data) => {
+		return data.split(",");
+	});
 
-for (let i in time) {
-	const [minutes, seconds] = time[i][1].split(":");
-	const totalSeconds = +seconds; //재생시간 구하기
-	// console.log(totalSeconds);
-	let mName = time[i][2]; //제목
-	let melody = time[i][3].replaceAll("#", ""); //#이 있으면 제거하고 진행
 	let compare = [];
-	if (melody.length > totalSeconds) {
-		//크면 재생시간만큼 자르기
-	}
-	if (melody.length < totalSeconds) {
-		//작으면 재생시간만큼 반복해서 붙이기
-	}
-	if (melody.length == totalSeconds) {
-		//같으면 그대로 넣기
-		compare.push([mName, melody]);
+	let replaceM = m.replaceAll("#", "");
+
+	for (let i in time) {
+		const [minutes, seconds] = time[i][1].split(":");
+		const totalSeconds = +seconds; //재생시간 구하기
+		let mName = time[i][2]; //제목
+		let melody = time[i][3].replaceAll("#", ""); //#이 있으면 제거하고 진행
+		if (melody.length > totalSeconds) {
+			//크면 재생시간만큼 자르기
+			let result = melody.substring(0, totalSeconds);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length < totalSeconds) {
+			//작으면 재생시간만큼 반복해서 붙이기
+			let result = melody.repeat(totalSeconds / melody.length);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length == totalSeconds) {
+			//같으면 그대로 넣기
+			compare.push([mName, melody, melody.length]);
+		}
 	}
 	//compare에 있는 애들 중에 m과 일치하고, 제일 긴 거 리턴 / 없으면 none 리턴
+	// console.log('compare?', compare);
+
+	const result = compare.map((data) => {
+		return data[1].includes(replaceM) ? data : "(None)";
+	});
+	// console.log('result?', result);
+
+	//중복되어 일치하는 경우 음이 제일 길게 나온 음악 리턴
+	//재생된 시간도 같을 경우 먼저 입력된 음악 제목을 리턴
+	let maxLength = 0;
+	let answer = [];
+	for (let i in result) {
+		if (result[i][2] > maxLength) {
+			maxLength = result[i][2];
+			answer = result[i];
+		}
+	}
+	return answer[0];
 }
 ```
 
 ```javascript
 //프로그래머스 코드
+function solution(m, musicinfos) {
+	const time = musicinfos.map((data) => {
+		return data.split(",");
+	});
+
+	let compare = [];
+	let replaceM = m.replaceAll("#", "");
+
+	for (let i in time) {
+		const [minutes, seconds] = time[i][1].split(":");
+		const totalSeconds = +seconds;
+		let mName = time[i][2];
+		let melody = time[i][3].replaceAll("#", "");
+		if (melody.length > totalSeconds) {
+			let result = melody.substring(0, totalSeconds);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length < totalSeconds) {
+			let result = melody.repeat(totalSeconds / melody.length);
+			compare.push([mName, result, result.length]);
+		}
+		if (melody.length == totalSeconds) {
+			//같으면 그대로 넣기
+			compare.push([mName, melody, melody.length]);
+		}
+	}
+	const result = compare.map((data) => {
+		return data[1].includes(replaceM) ? data : "(None)";
+	});
+	let maxLength = 0;
+	let answer = [];
+	for (let i in result) {
+		if (result[i][2] > maxLength) {
+			maxLength = result[i][2];
+			answer = result[i];
+		}
+	}
+	return answer[0];
+}
+```
+
+TypeError [Error]: m.replaceAll is not a function 가 자꾸 떠서 찾아보니 내장된 replaceAll은 없고, replace(/#/gi, ""); 로 쓰면 같은 결과가 나온다고 해서 바꿈
+
+---
+
+![image](https://user-images.githubusercontent.com/23302973/146873441-3a391a65-751f-4062-a74c-916a05dc06dc.png)
+
+#을 제거하고 난 이후를 생각못함
+
+---
+
+```javascript
+//프로그래머스 2차 코드
 ```
