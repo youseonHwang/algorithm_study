@@ -11,7 +11,7 @@
     4. A가 섞인 경우(ex. ACAB) : 전체 문자열 길이 -1 만큼 이동 횟수 +
 
 ```javascript
-//repl코드(미해결)
+//repl코드
 let str = "BANANA";
 
 console.log("결과: ", solution(str));
@@ -58,3 +58,59 @@ function solution(name) {
 	return change + move;
 }
 ```
+
+```javascript
+//그나마 이해한 코드
+let str = "BANANA";
+
+console.log("결과: ", solution(str));
+
+function solution(name) {
+  var answer = 0;
+  let alpha = name.split("");
+
+  const change = alpha.reduce((a, b) => {
+    const num = b.charCodeAt() - 65;
+    return (a += num > 13 ? 26 - num : num);
+  }, 0);
+
+  console.log("알파벳 더한 값: ", change);
+
+  let noA = [];
+  for (let i = 0; i < name.length; i++) {
+    if (name[i] === "A") continue;
+    noA.push(i); // A가 아닌 인덱스 넣기
+  }
+
+  console.log("noA: ", noA);
+
+  let i = 0; // 좌, 우 커서
+  const len = name.length;
+  while (noA.length > 0) {{
+    // 정방향: noA[0]쪽으로 가기 위함
+    const rightDist = i > noA[0] ? noA[0] + len - i : noA[0] - i;
+    // 역방향: [noA.length - 1]쪽으로 가기 위함
+    const leftDist =
+      i > noA[noA.length - 1]
+        ? i - noA[noA.length - 1]
+        : i + len - noA[noA.length - 1];
+
+    if (leftDist < rightDist) {
+      // 왼쪽이 더 가깝다(가장 마지막 값 넣기 -> 돌아서 뒤부터 순회하기 때문)
+      i = noA[noA.length - 1];
+      noA.pop(); // 뒤에 값 빼기
+      answer += leftDist;
+    } else {
+      // 오른쪽이 더 가깝다(가장 처음 값 넣기)
+      i = noA[0];
+      noA.shift(); // 앞에 갚 빼기
+      answer += rightDist;
+    }
+  }
+  answer += change; // 알파벳 더한 값 추가
+
+  return answer;
+}
+```
+
+나중에 다시 풀어보기
