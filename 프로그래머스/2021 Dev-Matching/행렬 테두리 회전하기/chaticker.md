@@ -124,3 +124,43 @@ function solution(rows, columns, queries) {
 조건이 잘못된 거 같은데 다시 해보기
 
 ---
+
+```javascript
+function solution(rows, columns, queries) {
+  let arr = Array.from(Array(rows), () => Array(columns).fill(0));
+
+  var num = 0;
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < columns; j++) {
+      num = num + 1;
+      arr[i][j] = num;
+    }
+  }
+
+  let answer = [];
+
+  for (let i = 0; i < queries.length; i++) {
+    let [r1, c1, r2, c2] = queries[i];
+    r1--, c1--, r2--, c2--;
+    let temp_data = arr[r1][c1];
+    const temp = [temp_data];
+
+    for (let i = r1; i < r2; i++) {
+      temp.push((arr[i][c1] = arr[i + 1][c1]));
+    }
+    for (let j = c1; j < c2; j++) {
+      temp.push((arr[r2][j] = arr[r2][j + 1]));
+    }
+    for (let i = r2; i > r1; i--) {
+      temp.push((arr[i][c2] = arr[i - 1][c2]));
+    }
+    for (let j = c2; j > c1; j--) {
+      temp.push((arr[r1][j] = arr[r1][j - 1]));
+    }
+    arr[r1][c1 + 1] = temp_data;
+
+    answer.push(Math.min(...temp));
+  }
+  return answer;
+}
+```
