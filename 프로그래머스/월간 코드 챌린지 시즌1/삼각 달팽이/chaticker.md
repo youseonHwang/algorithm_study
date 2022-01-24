@@ -48,3 +48,39 @@ function solution(n) {
 2차원 배열을 1차원 배열로 합치는 거 안 함 -> 할 예정
 
 ---
+
+```javascript
+//프로그래머스 코드
+function solution(n) {
+  let answer = [];
+  let x = 0,
+    y = -1,
+    num = 1;
+
+  //모든 요소를 0으로 우선 초기화
+  for (let i = 1; i < n + 1; i++) {
+    let tmp = Array(i).fill(0);
+    answer.push(tmp);
+  }
+
+  for (let i = 0; i < n; i++) {
+    for (let j = i; j < n; j++) {
+      //밑으로 내려가는 건 n과 같음
+      if (i % 3 === 0) {
+        y += 1;
+        //오른쪽으로
+      } else if (i % 3 === 1) {
+        x += 1;
+        //왼쪽으로
+      } else {
+        y -= 1;
+        x -= 1;
+      }
+      answer[y][x] = num;
+      num += 1;
+    }
+  }
+  answer = answer.flat(); // 얘 추가
+  return answer;
+}
+```
